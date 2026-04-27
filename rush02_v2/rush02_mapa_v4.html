@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rush 02 — Arquitectura & Mapa Mental</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; min-height: 100vh; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #F7F8FC;
+  color: #1E2761;
+  padding: 20px 28px 36px;
+  overflow-x: auto;
+}
+
+h1 { text-align: center; font-size: 20px; color: #1E2761; margin-bottom: 3px; font-weight: 800; }
+.subtitle { text-align: center; font-size: 12px; color: #4A5FA5; margin-bottom: 20px; }
+
+:root {
+  --navy: #1E2761;
+  --coral: #F96167;
+  --mid: #4A5FA5;
+  --white: #FFFFFF;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .analysis-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .auth-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .makefile-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 700px) {
+  .grid { grid-template-columns: 1fr; }
+  .analysis-grid { grid-template-columns: 1fr !important; }
+  .auth-grid { grid-template-columns: 1fr !important; }
+  .card-2 { grid-column: span 1 !important; }
+}
+
+/* HEADER */
+.header { grid-column: 1/-1; background: var(--navy); border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.header-text h2 { font-size: 20px; color: #fff; margin-bottom: 6px; }
+.header-text p { font-size: 11.5px; color: rgba(255,255,255,0.78); line-height: 1.55; max-width: 680px; }
+.badge { background: var(--coral); color: #fff; font-size: 11px; padding: 5px 14px; border-radius: 20px; font-weight: 700; white-space: nowrap; }
+
+/* SECTION TITLE */
+.section-title { grid-column: 1/-1; display: flex; align-items: center; gap: 10px; margin-top: 6px; margin-bottom: -4px; }
+.section-title span { background: var(--coral); color: #fff; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.section-title hr { flex: 1; border: none; border-top: 1px solid #D0D8F0; }
+
+/* ANALYSIS */
+.analysis { grid-column: 1/-1; background: var(--white); border-radius: 12px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.analysis > h3 { font-size: 14px; color: var(--navy); font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.analysis > h3 span { font-size: 11px; background: var(--navy); color: #fff; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.analysis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.analysis-card { padding: 12px 13px; border-radius: 8px; border-left: 4px solid var(--dc, #1E2761); background: #F7F8FC; }
+.analysis-card h4 { font-size: 11px; color: var(--dc, #1E2761); font-weight: 700; margin-bottom: 5px; line-height: 1.3; }
+.analysis-card p { font-size: 9.5px; color: var(--mid); line-height: 1.55; }
+.analysis-card .tag { display: inline-block; background: var(--dc, #1E2761); color: #fff; font-size: 8.5px; padding: 1px 7px; border-radius: 8px; margin-bottom: 5px; font-weight: 600; }
+
+/* AUTH STRIP */
+.auth-strip { background: var(--navy); border-radius: 8px; padding: 12px 16px; }
+.auth-strip h4 { font-size: 11px; color: var(--coral); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+.auth-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.auth-item { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 8px 10px; }
+.auth-item .fn-name { font-size: 11px; color: var(--coral); font-family: 'Consolas', monospace; font-weight: 700; margin-bottom: 3px; }
+.auth-item .fn-desc { font-size: 9px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+/* FLOW */
+.flow { grid-column: 1/-1; background: var(--white); border-radius: 12px; padding: 18px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.flow-title { font-size: 12px; font-weight: 700; color: var(--coral); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.flow-steps { display: flex; align-items: flex-start; flex-wrap: nowrap; gap: 0; overflow-x: auto; padding-bottom: 4px; }
+.fstep-wrap { display: flex; flex-direction: column; align-items: center; min-width: 118px; }
+.fstep { background: var(--navy); color: #fff; font-size: 10px; font-weight: 700; padding: 7px 10px; border-radius: 6px; font-family: 'Consolas', monospace; text-align: center; width: 100%; }
+.fstep.coral { background: var(--coral); }
+.fstep-note { font-size: 8.5px; color: var(--mid); margin-top: 5px; text-align: center; max-width: 110px; line-height: 1.4; }
+.flow-arrow { color: var(--navy); font-size: 18px; font-weight: 900; align-self: center; padding: 0 4px; margin-top: -14px; }
+.flow-errors { margin-top: 12px; padding: 8px 12px; background: #FFF0F0; border-left: 3px solid var(--coral); border-radius: 0 6px 6px 0; font-size: 10px; color: #c0392b; line-height: 1.6; }
+
+/* FILE CARDS */
+.card { background: var(--white); border-radius: 10px; padding: 15px 13px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--c, #1E2761); }
+.card h3 { font-size: 11px; font-family: 'Consolas', monospace; color: var(--c, #1E2761); margin-bottom: 10px; font-weight: 700; }
+.fn { font-size: 10px; font-family: 'Consolas', monospace; background: #F7F8FC; border-left: 3px solid var(--c, #1E2761); padding: 5px 8px; margin-bottom: 6px; border-radius: 0 4px 4px 0; color: #1E2761; }
+.fn .fn-title { font-weight: 700; margin-bottom: 2px; }
+.fn .fn-why { font-family: 'Segoe UI', sans-serif; font-size: 9.5px; color: var(--mid); line-height: 1.45; margin-top: 2px; }
+.dep { font-size: 9.5px; color: #888; margin-top: 9px; padding-top: 7px; border-top: 1px dashed #ddd; line-height: 1.5; }
+.dep b { color: var(--c, #1E2761); }
+.paired-note { font-size: 9px; color: var(--coral); font-style: italic; margin-top: 4px; }
+.card-2 { grid-column: span 2; }
+
+/* MAKEFILE */
+.makefile-section { grid-column: 1/-1; background: var(--white); border-radius: 12px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.makefile-section h3 { font-size: 14px; color: var(--navy); font-weight: 800; margin-bottom: 14px; }
+.makefile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mk-code { background: #1E1E2E; border-radius: 8px; padding: 14px 16px; font-family: 'Consolas', monospace; font-size: 9px; color: #A9B1D6; line-height: 1.7; white-space: pre; overflow-x: auto; }
+.mk-rules { display: flex; flex-direction: column; gap: 8px; }
+.mk-rule { padding: 10px 13px; border-radius: 8px; border-left: 4px solid var(--rc); background: #F7F8FC; }
+.mk-rule .rule-name { font-size: 11px; color: var(--rc); font-family: 'Consolas', monospace; font-weight: 700; margin-bottom: 4px; }
+.mk-rule .rule-desc { font-size: 9.5px; color: var(--mid); line-height: 1.45; }
+
+/* LEGEND */
+.legend { grid-column: 1/-1; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; padding: 10px 0 2px; }
+.li { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--mid); }
+.ld { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>Rush 02 — Arquitectura & Mapa Mental</h1>
+<p class="subtitle">Archivos · Funciones · Lógicas · Decisiones de diseño · Makefile · Dependencias</p>
+
+<div class="grid">
+
+<!-- 1. PRESENTACIÓN -->
+<div class="header">
+  <div class="header-text">
+    <h2>./rush-02 [dict_path] número</h2>
+    <p>
+      Convierte un número entero sin signo en su valor escrito en inglés usando un diccionario externo.
+      Acepta 1 argumento (solo el número) o 2 (diccionario alternativo + número). El programa habla en inglés.
+      Nunca convierte el número a un tipo entero — opera siempre sobre strings, lo que le permite
+      escalar a cualquier número que quepa en el diccionario sin límite de tamaño.
+      Diseñado con <strong style="color:#CADCFC">Divide &amp; Conquer</strong>: procesos independientes desarrollados
+      y verificados por separado.
+    </p>
+  </div>
+  <span class="badge">C · Norma 42 · 0 memory leaks</span>
+</div>
+
+<!-- 2. DECISIONES DE DISEÑO -->
+<div class="section-title">
+  <span>Decisiones de diseño</span><hr>
+</div>
+
+<div class="analysis">
+  <h3>8 decisiones que hacen funcionar la solución <span>por qué funciona</span></h3>
+
+  <div class="analysis-grid">
+
+    <!-- D1 -->
+    <div class="analysis-card" style="--dc:#1E2761">
+      <div class="tag">Decisión 1 — Estrategia</div>
+      <h4>Divide para conquistar: procesos, funciones clave y aceleradores</h4>
+      <p>
+        El problema se divide en procesos independientes: validar el input, leer el diccionario, parsear las líneas, convertir el número.
+        Cada proceso tiene <strong>funciones clave</strong> que hacen el trabajo central
+        y <strong>funciones de soporte</strong> (ft_strlen, ft_strcpy, ft_strrev, ft_trim_zeros)
+        que aceleran y simplifican las demás. Ninguna función supera 25 líneas ni 5 variables — Norma 42.
+      </p>
+    </div>
+
+    <!-- D2 -->
+    <div class="analysis-card" style="--dc:#F96167">
+      <div class="tag">Decisión 2 — Parseo</div>
+      <h4>Parseo del diccionario inspirado en atoi</h4>
+      <p>
+        El subject dice: "los números deben manejarse igual que atoi".
+        <code>split_line</code> aplica esa lógica: salta espacios al principio,
+        lee dígitos hasta el ':', salta el separador y los espacios, copia el valor hasta fin de línea.
+        La clave extraída se guarda siempre como string — nunca se convierte a entero.
+      </p>
+    </div>
+
+    <!-- D3 -->
+    <div class="analysis-card" style="--dc:#1E2761">
+      <div class="tag">Decisión 3 — Estructura de datos</div>
+      <h4>struct t_dict como tabla de consulta</h4>
+      <p>
+        Un <code>struct</code> agrupa los dos campos de cada entrada: <code>dict_number</code> (la clave numérica como string)
+        y <code>dict_words</code> (la palabra). Un array de 50 structs en main() es la tabla completa del diccionario.
+        Norma 42 exige prefijo <code>s_</code> para la estructura y <code>t_</code> para el typedef.
+      </p>
+    </div>
+
+    <!-- D4 -->
+    <div class="analysis-card" style="--dc:#F96167">
+      <div class="tag">Decisión 4 — Búsqueda</div>
+      <h4>Best match para encontrar la clave correcta</h4>
+      <p>
+        <code>find_dict_key</code> recorre todo el diccionario guardando siempre la clave más grande que sea ≤ N.
+        No depende del orden de las entradas. Funciona con diccionarios desordenados,
+        con líneas vacías y con claves extra añadidas — siempre encuentra la clave canónica correcta.
+      </p>
+    </div>
+
+    <!-- D5 -->
+    <div class="analysis-card" style="--dc:#1E2761">
+      <div class="tag">Decisión 5 — Algoritmo</div>
+      <h4>Recursión para descomponer cualquier número</h4>
+      <p>
+        <code>ft_convert_input</code> se llama a sí misma para los multiplicadores.
+        Para 2542: divide entre 1000 → cociente "2" → recursión → imprime "two" → imprime "thousand" → continúa con "542".
+        La recursión maneja cualquier profundidad sin lógica adicional, desde "forty two" hasta "nine hundred ninety nine trillion".
+      </p>
+    </div>
+
+    <!-- D6 -->
+    <div class="analysis-card" style="--dc:#F96167">
+      <div class="tag">Decisión 6 — Dos estrategias</div>
+      <h4>Sumar para ≤2 dígitos, multiplicar para ≥3 dígitos</h4>
+      <p>
+        Claves de 1-2 dígitos (20, 9, 40…) son <strong>aditivas</strong>: se restan de N y se imprime su palabra.
+        Claves de 3+ dígitos (100, 1000, 1000000…) son <strong>multiplicadoras</strong>: se divide N entre la clave,
+        se convierte recursivamente el cociente, se imprime la palabra, y se continúa con el resto.
+        La longitud de la clave determina la estrategia.
+      </p>
+    </div>
+
+    <!-- D7 -->
+    <div class="analysis-card" style="--dc:#1E2761">
+      <div class="tag">Decisión 7 — Corrección</div>
+      <h4>ft_trim_zeros: cortar los ceros que sobran</h4>
+      <p>
+        Después de cada resta, <code>ft_strsub</code> puede dejar ceros a la izquierda: "42 − 40 = 02".
+        Pero "02" y "2" son distintos como strings — <code>ft_strcmp</code> los trataría diferente
+        y <code>find_dict_key</code> nunca encontraría la clave "2".
+        <code>ft_trim_zeros</code> limpia esto en cada paso. Sin esta función el programa entraría en bucle infinito.
+      </p>
+    </div>
+
+    <!-- D8 -->
+    <div class="analysis-card" style="--dc:#F96167">
+      <div class="tag">Decisión 8 — Memoria</div>
+      <h4>Limpiar la memoria a lo largo del proceso</h4>
+      <p>
+        <strong>malloc se usa 3 veces por entrada del diccionario</strong> (1 buffer + 1 dict_number + 1 dict_words)
+        → hasta 83 mallocs para 41 entradas.<br>
+        <strong>free se usa en 3 momentos</strong>:<br>
+        · Si <code>open</code> falla → <code>free(buffer)</code> inmediato en read_file<br>
+        · Tras parsear todas las líneas → <code>free(buffer)</code> en read_diccionary<br>
+        · Al terminar el programa → <code>free_dict()</code> libera los 82 campos de las 41 entradas<br>
+        Verificado con valgrind: 0 leaks.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FUNCIONES AUTORIZADAS -->
+  <div class="auth-strip">
+    <h4>Funciones autorizadas por el subject — cómo las usamos</h4>
+    <div class="auth-grid">
+      <div class="auth-item">
+        <div class="fn-name">write</div>
+        <div class="fn-desc">Única función de salida. Imprime palabras, espacios, el '\n' final y los mensajes de error. Se usa en ft_convert_add, ft_convert_mul, y en main para errores.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">malloc</div>
+        <div class="fn-desc">Reserva memoria para el buffer del archivo (8193 bytes) y para cada dict_number (64 bytes) y dict_words (256 bytes) de cada entrada. Hasta 83 llamadas para 41 entradas.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">free</div>
+        <div class="fn-desc">Libera en 3 momentos: si open falla (buffer), tras parsear (buffer), y al final (free_dict libera los 82 campos de las 41 entradas). Cada malloc tiene su free.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">open</div>
+        <div class="fn-desc">Abre el .dict en modo solo lectura con O_RDONLY (de fcntl.h). Devuelve un file descriptor — número entero que identifica el archivo abierto en el sistema operativo.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">read</div>
+        <div class="fn-desc">Lee hasta 8192 bytes del archivo y los guarda en el buffer. Devuelve cuántos bytes leyó realmente. El '\0' hay que añadirlo manualmente: buffer[bytes] = '\0'.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">close</div>
+        <div class="fn-desc">Cierra el archivo tras leerlo. Obligatorio para no agotar los file descriptors del sistema operativo. Siempre se cierra lo que se abre.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">struct + typedef</div>
+        <div class="fn-desc">Parte del lenguaje C, no librería. Agrupa dict_number y dict_words en t_dict. Norma 42: prefijo s_ para struct, t_ para typedef. Array de 50 structs = tabla completa.</div>
+      </div>
+      <div class="auth-item">
+        <div class="fn-name">Makefile</div>
+        <div class="fn-desc">Sistema de construcción obligatorio por el subject. Define cómo compilar con -Wall -Wextra -Werror. Reglas requeridas: all, clean, fclean, re. Regla extra: sani para debugging.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. FLUJO DE EJECUCIÓN -->
+<div class="section-title">
+  <span>Flujo de ejecución</span><hr>
+</div>
+
+<div class="flow">
+  <div class="flow-title">El camino desde el terminal hasta la respuesta</div>
+  <div class="flow-steps">
+
+    <div class="fstep-wrap">
+      <div class="fstep">1. main()</div>
+      <div class="fstep-note">Punto de entrada. Decide qué diccionario usar (argv[1] si hay 3 args, "numbers.dict" si no). Llama a todo en orden y escribe '\n' al final.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep coral">2. validate_input()</div>
+      <div class="fstep-note">¿Es un número entero sin signo? Comprueba cada char entre '0' y '9'. Si falla → write "Error\n" y el programa termina.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep">3. read_diccionary()</div>
+      <div class="fstep-note">Coordina la lectura: llama read_file para cargar el archivo y fill_dictionary para procesarlo línea a línea. Devuelve cuántas entradas tiene el diccionario.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep coral">4. fill_struct() ×N</div>
+      <div class="fstep-note">Por cada línea válida: split_line separa clave y valor en el ':', fill_struct los guarda en t_dict[] con malloc. Construye la tabla de consulta.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep">5. ft_convert_input()</div>
+      <div class="fstep-note">Motor de conversión. While N>"0": find_dict_key busca el best match → si clave ≥3 dígitos → ft_convert_mul (recursivo) → si clave ≤2 dígitos → ft_convert_add.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep coral">6. write("\n")</div>
+      <div class="fstep-note">Añade el salto de línea final requerido por el subject.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+
+    <div class="fstep-wrap">
+      <div class="fstep">7. free_dict()</div>
+      <div class="fstep-note">Libera toda la memoria del diccionario: dict_number y dict_words de cada entrada. Verificado con valgrind: 0 leaks.</div>
+    </div>
+
+  </div>
+  <div class="flow-errors">
+    <strong>Salidas de error:</strong>
+    → <code>Error\n</code>: input no es número entero sin signo (letras, decimales, negativos, vacío) &nbsp;|&nbsp;
+    → <code>Dict Error\n</code>: el archivo .dict no se puede abrir, tiene formato incorrecto, o no tiene claves suficientes para resolver el número
+  </div>
+</div>
+
+<!-- 4. ARCHIVOS Y FUNCIONES -->
+<div class="section-title">
+  <span>Archivos y funciones</span><hr>
+</div>
+
+<!-- VALIDATE_INPUT.C -->
+<div class="card" style="--c:#1E2761">
+  <h3>validate_input.c</h3>
+  <div class="fn">
+    <div class="fn-title">ft_strlen(char *str)</div>
+    <div class="fn-why">Cuenta cuántos caracteres hay hasta el '\0'. Implementación propia — strlen está prohibida. Función de soporte usada por casi todas las demás.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">validate_input(argc, argv)</div>
+    <div class="fn-why">Puerta de entrada. Verifica que hay 2-3 argumentos y que el último tiene solo dígitos '0'-'9'. Rechaza puntos, letras y negativos. Devuelve 1 si válido, 0 si no.</div>
+  </div>
+  <div class="dep">Usada por: <b>main.c</b></div>
+</div>
+
+<!-- PARSE_DICTIONARY.C -->
+<div class="card" style="--c:#F96167">
+  <h3>parse_dictionary.c</h3>
+  <div class="fn">
+    <div class="fn-title">ft_strcpy(dst, src)</div>
+    <div class="fn-why">Copia un string completo a otro. Función de soporte para guardar clave y valor en la memoria reservada con malloc.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">split_line(line, dict_number, dict_words)</div>
+    <div class="fn-why">Separa "42 : forty two" en "42" y "forty two". Inspirada en atoi: salta espacios, lee dígitos hasta ':', salta separadores, copia el valor. Función clave del parseo.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">fill_struct(line, dict_entry)</div>
+    <div class="fn-why">Llama split_line y pide memoria con malloc para guardar el par clave-valor en la tabla t_dict. Construye cada fila de la tabla de consulta.</div>
+  </div>
+  <div class="dep">Usada por: <b>read_dictionary.c</b></div>
+</div>
+
+<!-- READ_DICTIONARY.C -->
+<div class="card card-2" style="--c:#1E2761">
+  <h3>read_dictionary.c — coordina la lectura del archivo</h3>
+  <div class="fn">
+    <div class="fn-title">read_file(file_path)</div>
+    <div class="fn-why">Abre el archivo con open (O_RDONLY), pide 8193 bytes con malloc, lee con read, cierra con close. Añade '\0' manual al final. Devuelve el contenido completo como string. <em>malloc #1</em></div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">create_line(file, line, i)</div>
+    <div class="fn-why">Extrae una sola línea del buffer desde la posición i hasta '\n'. Devuelve su longitud, lo que permite avanzar correctamente en el siguiente paso.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">process_entry(file, line, dict, count)</div>
+    <div class="fn-why">Recibe una línea y llama fill_struct para guardarla. Si fill_struct falla, libera el buffer (free #1) y devuelve error para que el proceso se detenga limpiamente.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">fill_dictionary(file, dict)</div>
+    <div class="fn-why">Recorre el buffer llamando create_line línea a línea. Salta líneas vacías (j==0). Llama process_entry para cada línea válida. Devuelve el total de entradas guardadas.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">read_diccionary(file_path, dict) — función principal</div>
+    <div class="fn-why">Orquesta todo: read_file → fill_dictionary → free(buffer) (free #2). Devuelve el número de entradas o -1 si algo falla.</div>
+  </div>
+  <div class="dep">Usada por: <b>main.c</b> | Usa: <b>parse_dictionary.c</b></div>
+</div>
+
+<!-- RUSH-02.H -->
+<div class="card card-2" style="--c:#F96167">
+  <h3>rush-02.h — el contrato del programa</h3>
+  <div class="fn">
+    <div class="fn-title">typedef struct s_dict → t_dict</div>
+    <div class="fn-why">Define la "ficha" de cada entrada: dict_number (clave como string, ej. "1000") y dict_words (palabra, ej. "thousand"). El array t_dict dict[50] en main() es la tabla completa. Norma 42: s_ para struct, t_ para typedef.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">17 prototipos de funciones</div>
+    <div class="fn-why">Un prototipo es la firma de una función sin su cuerpo. Permite que cualquier archivo .c llame a funciones definidas en otros archivos. Sin el header, el compilador no sabe que existen. Es el índice del programa.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">#include unistd.h · fcntl.h · stdlib.h</div>
+    <div class="fn-why">unistd.h habilita write, read, close. fcntl.h habilita open y O_RDONLY. stdlib.h habilita malloc y free. Al incluir solo rush-02.h en cada .c, todos tienen acceso a todo automáticamente.</div>
+  </div>
+  <div class="dep">Incluido por: <b>todos los archivos .c</b></div>
+</div>
+
+<!-- STRING_MATH.C -->
+<div class="card card-2" style="--c:#1E2761">
+  <h3>string_math.c — aritmética sobre strings</h3>
+  <p class="paired-note">⚠ Pareado con string_mathtwo.c — la Norma 42 limita a 25 líneas por función y 5 funciones por archivo. El mismo bloque funcional se divide entre dos archivos.</p>
+  <br>
+  <div class="fn">
+    <div class="fn-title">ft_strrev(str) — soporte</div>
+    <div class="fn-why">Invierte un string in-place con dos índices. Necesaria porque ft_count_to_str construye los dígitos del número al revés y hay que darles la vuelta.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_strcmp(a, b) — clave</div>
+    <div class="fn-why">Compara dos números-string: longitud primero (el más largo es mayor), luego char a char si tienen igual longitud. Base del best match y de todas las decisiones de conversión.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_strsub(result, a, b) — clave</div>
+    <div class="fn-why">Resta dos números-string dígito a dígito desde la derecha con carry, igual que en papel. Para la estrategia aditiva (claves ≤2 dígitos) y para calcular el resto en la división.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_strdiv(result, remainder, a, b) — clave</div>
+    <div class="fn-why">Divide por restas sucesivas: resta b de a hasta que a sea menor que b, contando las veces. El contador es el cociente (va a result), lo que queda es el resto (va a remainder). Para la estrategia multiplicadora.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_trim_zeros(number) — soporte crítico</div>
+    <div class="fn-why">Elimina ceros a la izquierda: "042"→"42". Se llama después de cada operación aritmética. Sin esta función ft_strcmp falla y el programa entra en bucle infinito. Es el pegamento que hace funcionar todo el sistema.</div>
+  </div>
+  <div class="dep">Usada por: <b>string_mathtwo.c</b> y <b>convert_input.c</b></div>
+</div>
+
+<!-- STRING_MATHTWO.C -->
+<div class="card card-2" style="--c:#F96167">
+  <h3>string_mathtwo.c — helpers de conversión</h3>
+  <p class="paired-note">⚠ Pareado con string_math.c — mismo bloque funcional dividido por límite de la Norma 42.</p>
+  <br>
+  <div class="fn">
+    <div class="fn-title">ft_count_to_str(result, count) — soporte</div>
+    <div class="fn-why">Convierte el cociente entero (resultado de la división) de vuelta a string. Extrae dígitos con % 10 en orden inverso, luego usa ft_strrev para darle la vuelta. Permite que el cociente siga procesándose como string en la recursión.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_convert_mul(number, dict, dict_size, idx) — clave</div>
+    <div class="fn-why">Estrategia multiplicadora para claves ≥3 dígitos (thousand, million…). Divide number entre la clave → obtiene cociente y resto → llama recursivamente ft_convert_input(cociente) → escribe la palabra de la clave → continúa con el resto.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_convert_add(number, dict, idx) — clave</div>
+    <div class="fn-why">Estrategia aditiva para claves ≤2 dígitos (twenty, nine…). Escribe la palabra, resta la clave de number con ft_strsub, y hace trim. Simple y directo.</div>
+  </div>
+  <div class="dep">Usada por: <b>convert_input.c</b> | Usa: <b>string_math.c</b></div>
+</div>
+
+<!-- CONVERT_INPUT.C -->
+<div class="card card-2" style="--c:#1E2761">
+  <h3>convert_input.c — el algoritmo central</h3>
+  <div class="fn">
+    <div class="fn-title">find_dict_key(dict, dict_size, number) — BEST MATCH</div>
+    <div class="fn-why">Recorre todo el diccionario de principio a fin. Para cada entrada ≤ N compara si es mayor que el mejor candidato actual. Al terminar devuelve el índice de la clave más grande que cabe en N. No necesita que el diccionario esté ordenado.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">ft_convert_input(number, dict, dict_size) — motor</div>
+    <div class="fn-why">Caso especial N=="0" → escribe "zero". While N>"0": find_dict_key busca el best match → si longitud de clave > 2 → ft_convert_mul (recursivo para el cociente) → si no → ft_convert_add. Se llama recursivamente desde ft_convert_mul.</div>
+  </div>
+  <div class="dep">Usada por: <b>main.c</b> | Llamada recursivamente desde: <b>string_mathtwo.c (ft_convert_mul)</b></div>
+</div>
+
+<!-- MAIN.C -->
+<div class="card card-2" style="--c:#F96167">
+  <h3>main.c — el orquestador</h3>
+  <div class="fn">
+    <div class="fn-title">free_dict(dict, size) — limpieza final</div>
+    <div class="fn-why">Libera la memoria de cada entrada: free(dict[i].dict_number) y free(dict[i].dict_words) para i=0 a size-1. Son los 82 free que corresponden a los 82 malloc de fill_struct para 41 entradas. free #3 en el proceso global.</div>
+  </div>
+  <div class="fn">
+    <div class="fn-title">main(argc, argv) — orquestador</div>
+    <div class="fn-why">validate_input → si falla: write "Error\n", return 1 → elige dict_path → read_diccionary → si falla: write "Dict Error\n", return 1 → ft_convert_input → write "\n" → free_dict → return 0.</div>
+  </div>
+  <div class="dep">Orquestador principal. Usa todos los archivos vía <b>rush-02.h</b></div>
+</div>
+
+<!-- 5. MAKEFILE -->
+<div class="section-title">
+  <span>Makefile — sistema de construcción</span><hr>
+</div>
+
+<div class="makefile-section">
+  <h3>¿Para qué sirve el Makefile y cómo está construido?</h3>
+  <p style="font-size:11px; color:var(--mid); margin-bottom:16px; line-height:1.6;">
+    El Makefile es el sistema de construcción del proyecto. Le dice al compilador qué compilar, con qué opciones y en qué orden.
+    Sin él el evaluador de 42 no puede compilar el proyecto. El subject exige obligatoriamente las reglas <code>$NAME</code>, <code>clean</code> y <code>fclean</code>.
+  </p>
+  <div class="makefile-grid">
+    <div>
+      <div class="mk-code"><span style="color:#6A9955"># Nombre del ejecutable</span>
+<span style="color:#F96167">NAME</span>   = rush-02
+<span style="color:#F96167">CC</span>     = cc
+<span style="color:#F96167">CFLAGS</span> = -Wall -Wextra -Werror
+
+<span style="color:#6A9955"># Archivos fuente</span>
+<span style="color:#F96167">SRCS</span> = main.c validate_input.c \
+        parse_dictionary.c \
+        read_dictionary.c \
+        string_math.c string_mathtwo.c \
+        convert_input.c
+
+<span style="color:#F96167">OBJS</span> = $(SRCS:.c=.o)
+
+all: $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+<span style="color:#6A9955"># Solo desarrollo — no entregar</span>
+sani:
+	$(CC) $(CFLAGS) $(SRCS) \
+	  -fsanitize=address -o $(NAME)
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re sani</div>
+    </div>
+    <div class="mk-rules">
+      <div class="mk-rule" style="--rc:#1E2761">
+        <div class="rule-name">make &nbsp;/&nbsp; make all</div>
+        <div class="rule-desc">Compila cada .c en un .o y luego los enlaza en rush-02. Las flags -Wall -Wextra -Werror convierten cualquier warning en error — código siempre limpio.</div>
+      </div>
+      <div class="mk-rule" style="--rc:#F96167">
+        <div class="rule-name">make sani</div>
+        <div class="rule-desc">Compila con AddressSanitizer. Detecta errores de memoria en tiempo real durante desarrollo. Nunca se entrega con esta opción activada.</div>
+      </div>
+      <div class="mk-rule" style="--rc:#1E2761">
+        <div class="rule-name">make clean</div>
+        <div class="rule-desc">Elimina los archivos .o intermedios. El ejecutable rush-02 se conserva.</div>
+      </div>
+      <div class="mk-rule" style="--rc:#F96167">
+        <div class="rule-name">make fclean</div>
+        <div class="rule-desc">Elimina todo: .o y el ejecutable. El directorio vuelve al estado inicial. Requerido por el subject.</div>
+      </div>
+      <div class="mk-rule" style="--rc:#1E2761">
+        <div class="rule-name">make re</div>
+        <div class="rule-desc">fclean + all. Recompila desde cero. Útil cuando cambias rush-02.h o quieres asegurarte de no tener objetos obsoletos.</div>
+      </div>
+      <div class="mk-rule" style="--rc:#F96167">
+        <div class="rule-name">.PHONY</div>
+        <div class="rule-desc">Declara que all, clean, fclean, re, sani son nombres de reglas y no archivos. Sin esto, si existiera un archivo llamado "clean", make lo ignoraría.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="li"><div class="ld" style="background:#1E2761"></div>Archivos / elementos principales</div>
+  <div class="li"><div class="ld" style="background:#F96167"></div>Archivos / elementos de soporte</div>
+  <div class="li"><div class="ld" style="background:#4A5FA5"></div>Notas de lógica interna</div>
+</div>
+
+</div><!-- /grid -->
+</body>
+</html>
